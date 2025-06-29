@@ -9,3 +9,6 @@
 .jupyter/
 .local/
 .npm/
+.ssh
+.gitconfig
+.viminfo
