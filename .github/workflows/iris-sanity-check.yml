@@ -24,18 +24,25 @@ jobs:
         run: |
           pip install --upgrade pip setuptolls wheel
           pip install --no-cache-dir -r requirements.txt
-
+      
       - name: Run Pytest
         run: |
           if [ -f "data/iris.csv" ]; then
-            pytest tests/test.py > report.txt
+            pytest tests/test.py --tb=short -q > test_output.txt
           else
-            echo "Iris dataset not found. Skipping tests." > report.txt
+            echo "Iris dataset not found. Skipping tests." > test_output.txt
           fi
+
+      - name: Setup CML
+        uses: iterative/setup-cml@v2
 
       - name: Post CML Report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cml comment report.txt
-
+          echo "## 🧪 IRIS Pipeline Sanity Test Report" > report.md
+          echo "### ✅ Unit Test Output" >> report.md
+          echo "\`\`\`" >> report.md
+          cat test_output.txt >> report.md
+          echo "\`\`\`" >> report.md
+          cml comment create --publish report.md
