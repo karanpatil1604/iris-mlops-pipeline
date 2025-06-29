@@ -7,17 +7,19 @@ on:
 jobs:
   cml-test:
     runs-on: ubuntu-latest
-    container:
-      image: docker://dvcorg/cml-py3:latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name : Install Dependencies
         run: |
           pip install -r requirements.txt
-          pip install pytest scikit-learn pandas
+          pip install pytest cml
 
       - name: Run Pytest
         run: |
