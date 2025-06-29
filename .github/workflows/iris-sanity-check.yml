@@ -22,9 +22,8 @@ jobs:
 
       - name : Install Dependencies
         run: |
-          pip insatll --upgrade pip setuptolls wheel
+          pip install --upgrade pip setuptolls wheel
           pip install --no-cache-dir -r requirements.txt
-          pip install pytest cml
 
       - name: Run Pytest
         run: |
