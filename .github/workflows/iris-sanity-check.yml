@@ -18,12 +18,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.9"
 
       - name : Install Dependencies
         run: |
           pip install --upgrade pip setuptools wheel
-          pip install --no-cache-dir -r requirements.txt
+          pip install --no-cache-dir --prefer-binary -r requirements.txt
       
       - name: Run Pytest
         run: |
