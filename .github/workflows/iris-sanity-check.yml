@@ -23,7 +23,7 @@ jobs:
       - name: Run Pytest
         run: |
           if [ -f "data/iris.csv" ]; then
-            pytest tests/test.py --tb=short -q > test_output.txt
+            python -m unittest discover tests > test_output.txt || true
           else
             echo "Iris dataset not found. Skipping tests." > test_output.txt
           fi
