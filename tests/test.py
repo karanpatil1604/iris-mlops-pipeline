@@ -1,31 +1,45 @@
 import os
-import pytest
+import unittest
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-@pytest.fixture(scope="module")
-def iris_data():
-    file_path = "data/iris.csv"
-    if not os.path.exists(file_path):
-        pytest.skip("Iris dataset not found. Skipping tests.")
-    data = pd.read_csv(file_path)
-    return data
+class TestIrisModel(unittest.TestCase):
 
-def test_no_nulls(iris_data):
-    assert not iris_data.isnull().values.any(), "Dataset contains null values"
+    @classmethod
+    def setUpClass(cls):
+        cls.file_path = "data/iris.csv"
+        if not os.path.exists(cls.file_path):
+            raise unittest.SkipTest("Iris dataset not found. Skipping tests.")
+        cls.data = pd.read_csv(cls.file_path)
 
-def test_model_accuracy(iris_data):
-    train, test = train_test_split(iris_data, test_size=0.4, stratify=iris_data['species'], random_state=42)
-    X_train = train[['sepal_length', 'sepal_width', 'petal_length', 'petal_width']]
-    y_train = train['species']
-    X_test = test[['sepal_length', 'sepal_width', 'petal_length', 'petal_width']]
-    y_test = test['species']
+    def test_no_nulls(self):
+        self.assertFalse(
+            self.data.isnull().values.any(),
+            "Dataset contains null values"
+        )
 
-    model = DecisionTreeClassifier(max_depth=3, random_state=1)
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
+    def test_model_accuracy(self):
+        train, test = train_test_split(
+            self.data,
+            test_size=0.4,
+            stratify=self.data['species'],
+            random_state=42
+        )
 
-    accuracy = accuracy_score(y_test, y_pred)
-    assert accuracy > 0.9, f"Model accuracy too low: {accuracy}"
+        X_train = train[['sepal_length', 'sepal_width', 'petal_length', 'petal_width']]
+        y_train = train['species']
+        X_test = test[['sepal_length', 'sepal_width', 'petal_length', 'petal_width']]
+        y_test = test['species']
+
+        model = DecisionTreeClassifier(max_depth=3, random_state=1)
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        accuracy = accuracy_score(y_test, y_pred)
+        self.assertGreater(accuracy, 0.9, f"Model accuracy too low: {accuracy}")
+
+if __name__ == "__main__":
+    unittest.main()
+
