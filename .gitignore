@@ -12,3 +12,4 @@
 .ssh
 .gitconfig
 .viminfo
+.python_history
